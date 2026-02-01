@@ -131,15 +131,3 @@ GET /schedules/{id}
 ## ERD
 
 <img width="528" height="279" alt="스크린샷 2026-01-31 오후 12 59 14" src="https://github.com/user-attachments/assets/8b11e654-4a9f-496f-b9db-30cc1b635d26" />
-
-### 테이블 설명
-
-| 컬럼명 | 데이터 타입 | 제약조건 | 설명 |
-|--------|-------------|----------|------|
-| id | BIGINT | PK, AUTO_INCREMENT | 일정 고유 식별자 |
-| title | VARCHAR(30) | NOT NULL | 일정 제목 |
-| content | VARCHAR(200) | NOT NULL | 일정 내용 |
-| author | VARCHAR(50) | NOT NULL | 작성자명 |
-| password | VARCHAR(100) | NOT NULL | 비밀번호 |
-| created_at | DATETIME | NOT NULL | 작성일 |
-| updated_at | DATETIME | NOT NULL | 수정일 |
