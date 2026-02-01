@@ -1,8 +1,11 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.CommentResponseDto;
+import com.example.demo.dto.ScheduleDetailResponseDto;
 import com.example.demo.dto.ScheduleRequestDto;
 import com.example.demo.dto.ScheduleResponseDto;
 import com.example.demo.entity.Schedule;
+import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final CommentRepository commentRepository;
 
     public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto) {
         Schedule schedule = new Schedule(
@@ -37,10 +41,12 @@ public class ScheduleService {
         return schedules.stream().map(ScheduleResponseDto::new).toList();
     }
 
-    public ScheduleResponseDto getSchedule(Long id) {
+    public ScheduleDetailResponseDto getSchedule(Long id) {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 일정이 존재하지 않습니다."));
-        return new ScheduleResponseDto(schedule);
+        List<CommentResponseDto> comments = commentRepository.findAllByScheduleId(id)
+                .stream().map(CommentResponseDto::new).toList();
+        return new ScheduleDetailResponseDto(schedule, comments);
     }
 
     @Transactional

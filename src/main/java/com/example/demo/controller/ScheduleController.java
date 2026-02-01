@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.ScheduleDetailResponseDto;
 import com.example.demo.dto.ScheduleRequestDto;
 import com.example.demo.dto.ScheduleResponseDto;
 import com.example.demo.service.ScheduleService;
@@ -30,8 +31,8 @@ public class ScheduleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long id) {
-        ScheduleResponseDto responseDto = scheduleService.getSchedule(id);
+    public ResponseEntity<ScheduleDetailResponseDto> getSchedule(@PathVariable Long id) {
+        ScheduleDetailResponseDto responseDto = scheduleService.getSchedule(id);
         return ResponseEntity.ok(responseDto);
     }
 
