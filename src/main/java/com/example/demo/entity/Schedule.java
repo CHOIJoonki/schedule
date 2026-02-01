@@ -5,13 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@EntityListeners(AbstractMethodError.class) //감시 대상과 감시자 설정
+@EntityListeners(AuditingEntityListener.class)
 public class Schedule {
 
     @Id
@@ -42,5 +43,10 @@ public class Schedule {
         this.content = content;
         this.author = author;
         this.password = password;
+    }
+
+    public void update(String title, String author) {
+        this.title = title;
+        this.author = author;
     }
 }
