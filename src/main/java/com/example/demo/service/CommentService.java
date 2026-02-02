@@ -16,8 +16,6 @@ public class CommentService {
     private final ScheduleRepository scheduleRepository;
 
     public CommentResponseDto createComment(CommentRequestDto requestDto) {
-        validateCommentRequest(requestDto);
-
         scheduleRepository.findById(requestDto.getScheduleId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 일정이 존재하지 않습니다."));
 
@@ -34,20 +32,5 @@ public class CommentService {
         );
         Comment savedComment = commentRepository.save(comment);
         return new CommentResponseDto(savedComment);
-    }
-
-    private void validateCommentRequest(CommentRequestDto requestDto) {
-        if (requestDto.getContent() == null || requestDto.getContent().isEmpty()) {
-            throw new IllegalArgumentException("댓글 내용은 필수값입니다.");
-        }
-        if (requestDto.getContent().length() > 100) {
-            throw new IllegalArgumentException("댓글 내용은 100자 이내로 작성해주세요.");
-        }
-        if (requestDto.getAuthor() == null || requestDto.getAuthor().isEmpty()) {
-            throw new IllegalArgumentException("작성자명은 필수값입니다.");
-        }
-        if (requestDto.getPassword() == null || requestDto.getPassword().isEmpty()) {
-            throw new IllegalArgumentException("비밀번호는 필수값입니다.");
-        }
     }
 }
