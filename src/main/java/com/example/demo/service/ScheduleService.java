@@ -1,4 +1,3 @@
-
 package com.example.demo.service;
 
 import com.example.demo.dto.CommentResponseDto;
@@ -6,8 +5,10 @@ import com.example.demo.dto.ScheduleDetailResponseDto;
 import com.example.demo.dto.ScheduleRequestDto;
 import com.example.demo.dto.ScheduleResponseDto;
 import com.example.demo.entity.Schedule;
+import com.example.demo.entity.User;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.ScheduleRepository;
+import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,22 +21,26 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
 
     public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto) {
+        User user = userRepository.findById(requestDto.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
         Schedule schedule = new Schedule(
                 requestDto.getTitle(),
                 requestDto.getContent(),
-                requestDto.getAuthor(),
+                user,
                 requestDto.getPassword()
         );
         Schedule savedSchedule = scheduleRepository.save(schedule);
         return new ScheduleResponseDto(savedSchedule);
     }
 
-    public List<ScheduleResponseDto> getSchedules(String author) {
+    public List<ScheduleResponseDto> getSchedules(String username) {
         List<Schedule> schedules;
-        if (author != null && !author.isEmpty()) {
-            schedules = scheduleRepository.findAllByAuthorOrderByUpdatedAtDesc(author);
+        if (username != null && !username.isEmpty()) {
+            schedules = scheduleRepository.findAllByUser_UsernameOrderByUpdatedAtDesc(username);
         } else {
             schedules = scheduleRepository.findAllByOrderByUpdatedAtDesc();
         }
@@ -59,7 +64,7 @@ public class ScheduleService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        schedule.update(requestDto.getTitle(), requestDto.getAuthor());
+        schedule.update(requestDto.getTitle());
         return new ScheduleResponseDto(schedule);
     }
 

@@ -8,19 +8,20 @@ import java.util.List;
 
 @Getter
 public class ScheduleDetailResponseDto {
-    private Long id;
+
+    private Long scheduleId;
     private String title;
     private String content;
-    private String author;
+    private String username;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<CommentResponseDto> comments;
 
     public ScheduleDetailResponseDto(Schedule schedule, List<CommentResponseDto> comments) {
-        this.id = schedule.getId();
+        this.scheduleId = schedule.getScheduleId();
         this.title = schedule.getTitle();
         this.content = schedule.getContent();
-        this.author = schedule.getAuthor();
+        this.username = schedule.getUser().getUsername();
         this.createdAt = schedule.getCreatedAt();
         this.updatedAt = schedule.getUpdatedAt();
         this.comments = comments;

@@ -13,24 +13,17 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Schedule {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long scheduleId;
+    private Long userId;
 
-    @Column(nullable = false, length = 30)
-    private String title;
+    @Column(nullable = false, length = 50)
+    private String username;
 
-    @Column(nullable = false, length = 200)
-    private String content;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @Column(nullable = false, length = 100)
-    private String password;
+    @Column(nullable = false, unique = true)
+    private String email;
 
     @CreatedDate
     @Column(updatable = false)
@@ -39,14 +32,13 @@ public class Schedule {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public Schedule(String title, String content, User user, String password) {
-        this.title = title;
-        this.content = content;
-        this.user = user;
-        this.password = password;
+    public User(String username, String email) {
+        this.username = username;
+        this.email = email;
     }
 
-    public void update(String title) {
-        this.title = title;
+    public void update(String username, String email) {
+        this.username = username;
+        this.email = email;
     }
 }

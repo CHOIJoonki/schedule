@@ -26,8 +26,8 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ScheduleResponseDto>> getSchedules(@RequestParam(required = false) String author) {
-        List<ScheduleResponseDto> responseDtos = scheduleService.getSchedules(author);
+    public ResponseEntity<List<ScheduleResponseDto>> getSchedules(@RequestParam(required = false) String username) {
+        List<ScheduleResponseDto> responseDtos = scheduleService.getSchedules(username);
         return ResponseEntity.ok(responseDtos);
     }
 
