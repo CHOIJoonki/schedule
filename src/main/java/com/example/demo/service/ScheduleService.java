@@ -23,15 +23,14 @@ public class ScheduleService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
 
-    public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto) {
-        User user = userRepository.findById(requestDto.getUserId())
+    public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto, Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 
         Schedule schedule = new Schedule(
                 requestDto.getTitle(),
                 requestDto.getContent(),
-                user,
-                requestDto.getPassword()
+                user
         );
         Schedule savedSchedule = scheduleRepository.save(schedule);
         return new ScheduleResponseDto(savedSchedule);
@@ -56,24 +55,24 @@ public class ScheduleService {
     }
 
     @Transactional
-    public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto requestDto) {
+    public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto requestDto, Long userId) {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 일정이 존재하지 않습니다."));
 
-        if (!schedule.getPassword().equals(requestDto.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        if (!schedule.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("본인이 작성한 일정만 수정할 수 있습니다.");
         }
 
         schedule.update(requestDto.getTitle());
         return new ScheduleResponseDto(schedule);
     }
 
-    public void deleteSchedule(Long id, ScheduleRequestDto requestDto) {
+    public void deleteSchedule(Long id, Long userId) {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 일정이 존재하지 않습니다."));
 
-        if (!schedule.getPassword().equals(requestDto.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        if (!schedule.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("본인이 작성한 일정만 삭제할 수 있습니다.");
         }
 
         scheduleRepository.delete(schedule);

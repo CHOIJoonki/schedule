@@ -4,6 +4,7 @@ import com.example.demo.dto.ScheduleDetailResponseDto;
 import com.example.demo.dto.ScheduleRequestDto;
 import com.example.demo.dto.ScheduleResponseDto;
 import com.example.demo.service.ScheduleService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,8 +21,9 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping
-    public ResponseEntity<ScheduleResponseDto> createSchedule(@Valid @RequestBody ScheduleRequestDto requestDto) {
-        ScheduleResponseDto responseDto = scheduleService.createSchedule(requestDto);
+    public ResponseEntity<ScheduleResponseDto> createSchedule(@Valid @RequestBody ScheduleRequestDto requestDto, HttpServletRequest request) {
+        Long userId = (Long) request.getSession().getAttribute("userId");
+        ScheduleResponseDto responseDto = scheduleService.createSchedule(requestDto, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
@@ -38,14 +40,16 @@ public class ScheduleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> updateSchedule(@PathVariable Long id, @Valid @RequestBody ScheduleRequestDto requestDto) {
-        ScheduleResponseDto responseDto = scheduleService.updateSchedule(id, requestDto);
+    public ResponseEntity<ScheduleResponseDto> updateSchedule(@PathVariable Long id, @Valid @RequestBody ScheduleRequestDto requestDto, HttpServletRequest request) {
+        Long userId = (Long) request.getSession().getAttribute("userId");
+        ScheduleResponseDto responseDto = scheduleService.updateSchedule(id, requestDto, userId);
         return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSchedule(@PathVariable Long id, @RequestBody ScheduleRequestDto requestDto) {
-        scheduleService.deleteSchedule(id, requestDto);
+    public ResponseEntity<Void> deleteSchedule(@PathVariable Long id, HttpServletRequest request) {
+        Long userId = (Long) request.getSession().getAttribute("userId");
+        scheduleService.deleteSchedule(id, userId);
         return ResponseEntity.ok().build();
     }
 }

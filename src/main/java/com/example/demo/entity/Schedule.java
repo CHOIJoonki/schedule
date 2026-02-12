@@ -29,9 +29,6 @@ public class Schedule {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false, length = 100)
-    private String password;
-
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -39,11 +36,10 @@ public class Schedule {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public Schedule(String title, String content, User user, String password) {
+    public Schedule(String title, String content, User user) {
         this.title = title;
         this.content = content;
         this.user = user;
-        this.password = password;
     }
 
     public void update(String title) {
