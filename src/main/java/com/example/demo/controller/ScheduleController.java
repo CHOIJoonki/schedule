@@ -1,17 +1,17 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.ScheduleDetailResponseDto;
+import com.example.demo.dto.SchedulePageResponseDto;
 import com.example.demo.dto.ScheduleRequestDto;
 import com.example.demo.dto.ScheduleResponseDto;
 import com.example.demo.service.ScheduleService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/schedules")
@@ -28,8 +28,10 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ScheduleResponseDto>> getSchedules(@RequestParam(required = false) String username) {
-        List<ScheduleResponseDto> responseDtos = scheduleService.getSchedules(username);
+    public ResponseEntity<Page<SchedulePageResponseDto>> getSchedules(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<SchedulePageResponseDto> responseDtos = scheduleService.getSchedules(page, size);
         return ResponseEntity.ok(responseDtos);
     }
 

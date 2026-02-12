@@ -1,15 +1,16 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.CommentResponseDto;
-import com.example.demo.dto.ScheduleDetailResponseDto;
-import com.example.demo.dto.ScheduleRequestDto;
-import com.example.demo.dto.ScheduleResponseDto;
+import com.example.demo.dto.*;
 import com.example.demo.entity.Schedule;
 import com.example.demo.entity.User;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.ScheduleRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,14 +37,14 @@ public class ScheduleService {
         return new ScheduleResponseDto(savedSchedule);
     }
 
-    public List<ScheduleResponseDto> getSchedules(String username) {
-        List<Schedule> schedules;
-        if (username != null && !username.isEmpty()) {
-            schedules = scheduleRepository.findAllByUser_UsernameOrderByUpdatedAtDesc(username);
-        } else {
-            schedules = scheduleRepository.findAllByOrderByUpdatedAtDesc();
-        }
-        return schedules.stream().map(ScheduleResponseDto::new).toList();
+    public Page<SchedulePageResponseDto> getSchedules(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
+        Page<Schedule> schedulePage = scheduleRepository.findAll(pageable);
+
+        return schedulePage.map(schedule -> {
+            int commentCount = commentRepository.countBySchedule_ScheduleId(schedule.getScheduleId());
+            return new SchedulePageResponseDto(schedule, commentCount);
+        });
     }
 
     public ScheduleDetailResponseDto getSchedule(Long id) {
