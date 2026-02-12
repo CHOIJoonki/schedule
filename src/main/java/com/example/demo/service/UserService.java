@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.config.PasswordEncoder;
 import com.example.demo.dto.UserRequestDto;
 import com.example.demo.dto.UserResponseDto;
 import com.example.demo.entity.User;
@@ -15,9 +16,11 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponseDto createUser(UserRequestDto requestDto) {
-        User user = new User(requestDto.getUsername(), requestDto.getEmail(), requestDto.getPassword());
+        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+        User user = new User(requestDto.getUsername(), requestDto.getEmail(), encodedPassword);
         User savedUser = userRepository.save(user);
         return new UserResponseDto(savedUser);
     }
