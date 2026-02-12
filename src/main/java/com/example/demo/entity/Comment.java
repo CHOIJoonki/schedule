@@ -17,19 +17,18 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long commentId;
 
     @Column(nullable = false, length = 100)
     private String content;
 
-    @Column(nullable = false, length = 50)
-    private String author;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(nullable = false, length = 100)
-    private String password;
-
-    @Column(nullable = false)
-    private Long scheduleId;
+    @ManyToOne
+    @JoinColumn(name = "schedule_id", nullable = false)
+    private Schedule schedule;
 
     @CreatedDate
     @Column(updatable = false)
@@ -38,10 +37,9 @@ public class Comment {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public Comment(String content, String author, String password, Long scheduleId) {
+    public Comment(String content, User user, Schedule schedule) {
         this.content = content;
-        this.author = author;
-        this.password = password;
-        this.scheduleId = scheduleId;
+        this.user = user;
+        this.schedule = schedule;
     }
 }

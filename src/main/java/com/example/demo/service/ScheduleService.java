@@ -49,7 +49,7 @@ public class ScheduleService {
     public ScheduleDetailResponseDto getSchedule(Long id) {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 일정이 존재하지 않습니다."));
-        List<CommentResponseDto> comments = commentRepository.findAllByScheduleId(id)
+        List<CommentResponseDto> comments = commentRepository.findAllBySchedule_ScheduleId(id)
                 .stream().map(CommentResponseDto::new).toList();
         return new ScheduleDetailResponseDto(schedule, comments);
     }
